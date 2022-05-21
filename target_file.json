@@ -1,0 +1,15 @@
+[
+  { "name": "ansible", "version": "5.8.0" },
+  { "name": "ansible-core", "version": "2.12.5" },
+  { "name": "cffi", "version": "1.15.0" },
+  { "name": "cryptography", "version": "37.0.2" },
+  { "name": "Jinja2", "version": "3.1.2" },
+  { "name": "MarkupSafe", "version": "2.1.1" },
+  { "name": "packaging", "version": "21.3" },
+  { "name": "pip", "version": "22.0.2" },
+  { "name": "pycparser", "version": "2.21" },
+  { "name": "pyparsing", "version": "3.0.9" },
+  { "name": "PyYAML", "version": "6.0" },
+  { "name": "resolvelib", "version": "0.5.4" },
+  { "name": "setuptools", "version": "59.6.0" }
+]
