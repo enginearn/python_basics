@@ -7,6 +7,3 @@ def check_file_extension(file_extension):
     else:
         pass
     return file_extension
-
-outside_argument = "abc"
-input_txt = sys.argv[1]
