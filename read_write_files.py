@@ -11,7 +11,6 @@ sep = "=="
 target_file_json = "target_file.json"
 target_file_csv = "target_file.csv"
 
-
 output_file_txt = "requirements.txt"
 output_file_json = "requirements_from_json.txt"
 output_file_csv = "requirements_from_csv.txt"
