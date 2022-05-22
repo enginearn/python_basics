@@ -4,7 +4,7 @@ import sys
 from tokenize import group
 
 given_file = ""
-file_extension = "txt"
+detect_file_extension = ""
 target_file_txt = "target_file.txt"
 sep = "=="
 
@@ -55,12 +55,11 @@ def check_file_extension(given_file):
         given_file_name = given_file.split(".")[1]
         file_extension = given_file.split(".")[2]
         print(f"拡張子: {file_extension}")
-    return file_extension
-
+        return file_extension
+        
 # テキストファイル読み込みと書き出し用にそれぞれを関数化
 def read_and_sep(target_file_txt):
-    global results_txt
-    if target_file_txt or file_extension == "txt":
+    if target_file_txt or detect_file_extension == "txt":
         with open(target_file_txt, "r") as tf:
             data = tf.readlines()
             results_txt = [target.split(sep)[0] for target in list(data)]
@@ -74,8 +73,7 @@ def out_file(results_txt):
 
 # JSONファイルの読み出しと書き出し関数
 def json_read(target_file_json):
-    global results_json
-    if target_file_json or file_extension == "json":
+    if target_file_json or detect_file_extension == "json":
         with open(target_file_json, "r") as jf:
             read_json = jf.read()
             json_file = json.dumps(read_json)
@@ -90,14 +88,12 @@ def json_out(results_json):
 
 # CSVファイルの読み出しと書き出し関数
 def csv_read(target_file_csv):
-    global results_csv
-    if target_file_csv or file_extension == "csv":
+    if target_file_csv or detect_file_extension == "csv":
         with open(target_file_csv, "r") as cf:
             data = csv.reader(cf, delimiter=" ")
             header = [next(data) for _ in range(2)]
             results_csv = [d[0] for d in data]
-            results = results_csv
-        return results
+        return results_csv
 
 def csv_out(results_csv):
     with open(output_file_csv, "w") as co:
@@ -106,16 +102,16 @@ def csv_out(results_csv):
 
 def main():
 
-    check_file_extension(given_file)
+    detect_file_extension = check_file_extension(given_file)
 
-    read_and_sep(target_file_txt)
-    out_file(results_txt)
+    results = read_and_sep(target_file_txt)
+    out_file(results)
 
-    json_read(target_file_json)
-    json_out(results_json)
+    results = json_read(target_file_json)
+    json_out(results)
 
-    csv_read(target_file_csv)
-    csv_out(results_csv)
+    results = csv_read(target_file_csv)
+    csv_out(results)
 
 if __name__ == "__main__":
     main()
