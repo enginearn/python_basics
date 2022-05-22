@@ -1,11 +1,16 @@
 import csv
 import json
+import sys
+from tokenize import group
 
+given_file = ""
+file_extension = "txt"
 target_file_txt = "target_file.txt"
 sep = "=="
 
 target_file_json = "target_file.json"
 target_file_csv = "target_file.csv"
+
 
 output_file_txt = "requirements.txt"
 output_file_json = "requirements_from_json.txt"
@@ -45,29 +50,39 @@ with open(target_file_txt, "r") as tf:
     print(f"readlines(): {type(data)}")
     print([target.split(sep)[0] for target in list(data)])
 
+def check_file_extension(given_file):
+    if len(sys.argv) > 1 :
+        given_file = sys.argv[1]
+        given_file_name = given_file.split(".")[1]
+        file_extension = given_file.split(".")[2]
+        print(f"拡張子: {file_extension}")
+    return file_extension
+
 # テキストファイル読み込みと書き出し用にそれぞれを関数化
 def read_and_sep(target_file_txt):
-    with open(target_file_txt, "r") as tf:
-        data = tf.readlines()
-        global results_txt
-        results_txt = [target.split(sep)[0] for target in list(data)]
-        print(f"results: {type(results_txt)}\nresultsの中身: {results_txt}")
-    return results_txt
+    global results_txt
+    if target_file_txt or file_extension == "txt":
+        with open(target_file_txt, "r") as tf:
+            data = tf.readlines()
+            results_txt = [target.split(sep)[0] for target in list(data)]
+            print(f"results_txt: {type(results_txt)}\nread_and_sep関数のresults_txtの中身: {results_txt}")
+        return results_txt
 
-def out_file(results):
+def out_file(results_txt):
     with open(output_file_txt, "w", newline="") as of:
-        for result in results:
+        for result in results_txt:
             of.write(result + "\n")
 
 # JSONファイルの読み出しと書き出し関数
 def json_read(target_file_json):
-    with open(target_file_json, "r") as jf:
-        read_json = jf.read()
-        json_file = json.dumps(read_json)
-        json_file = json.loads(read_json)
-        global results_json
-        results_json = [k["name"] for k in json_file]
-    return results_json
+    global results_json
+    if target_file_json or file_extension == "json":
+        with open(target_file_json, "r") as jf:
+            read_json = jf.read()
+            json_file = json.dumps(read_json)
+            json_file = json.loads(read_json)
+            results_json = [k["name"] for k in json_file]
+        return results_json
 
 def json_out(results_json):
     with open(output_file_json, "w") as jw:
@@ -76,12 +91,14 @@ def json_out(results_json):
 
 # CSVファイルの読み出しと書き出し関数
 def csv_read(target_file_csv):
-    with open(target_file_csv, "r") as cf:
-        global results_csv
-        data = csv.reader(cf, delimiter=" ")
-        header = [next(data) for _ in range(2)]
-        results_csv = [d[0] for d in data]
-    return results_csv
+    global results_csv
+    if target_file_csv or file_extension == "csv":
+        with open(target_file_csv, "r") as cf:
+            data = csv.reader(cf, delimiter=" ")
+            header = [next(data) for _ in range(2)]
+            results_csv = [d[0] for d in data]
+            results = results_csv
+        return results
 
 def csv_out(results_csv):
     with open(output_file_csv, "w") as co:
@@ -89,6 +106,9 @@ def csv_out(results_csv):
             co.write(d + "\n")
 
 def main():
+
+    check_file_extension(given_file)
+
     read_and_sep(target_file_txt)
     out_file(results_txt)
 
