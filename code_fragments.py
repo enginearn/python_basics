@@ -159,17 +159,86 @@ example_func(
 )
 print(example_func.__doc__)
 
-
+# 関数内関数
 def outer(a, b):
     def inner(c, d):
         return c + d
 
-    r = inner(a, b)
-    return r
+    r1 = inner(a, b)
+    r2 = inner(b, a)
+    print(r1 + r2)
 
+outer(1, 2)
 
-r = outer(1, 2)
+# closure
+def outer(a, b):
+
+    def inner():
+        return a + b
+
+    return inner
+
+print(outer(1, 2))
+f = outer(1, 2)
+r = f()
 print(r)
+
+def circle_area_func(pi):
+    def circle_area(radius):
+        return pi * radius ** 2
+
+    return circle_area
+
+c1 = circle_area_func(3.14)
+c2 = circle_area_func(3.141592653589793)
+
+print(c1(10))
+print(c2(10))
+
+# decorator
+def print_info(func):
+    def wrapper(*args, **kwargs):
+        print("start")
+        result = func(*args, **kwargs)
+        print("end")
+        return result
+    return wrapper
+
+@print_info
+def add_num(a, b):
+    return a + b
+
+r = add_num(10, 20)
+print(r)
+
+
+@print_info
+def sub_num(a, b):
+    return a - b
+
+r = sub_num(10, 20)
+print(r)
+
+def print_more(func):
+    def wrapper(*args, **kwargs):
+        print(f"func: {func.__name__}")
+        print(f"args: {args}")
+        print(f"kwargs: {kwargs}")
+        print(f"result: {result}")
+        return result
+    return wrapper
+
+@print_more
+def add_num(a, b):
+    return a + b
+
+r = add_num(10, 20)
+print(r)
+
+f = print_info(print_more(add_num))
+r = f(10, 20)
+print(r)
+
 
 if __name__ == "__main__":
     sys.exit(0)
