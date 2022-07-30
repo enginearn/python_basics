@@ -502,6 +502,7 @@ print(f"sys.path: {sys.path}")
 # class
 import abc
 
+
 class Person(object, metaclass=abc.ABCMeta):
     # constructor
     def __init__(self, name, age):
@@ -521,11 +522,11 @@ class Person(object, metaclass=abc.ABCMeta):
     def say_age(self):
         print(f"I'm {self.age} years old")
 
-    # def drive(self):
-    #     if self.age >= 18:
-    #         print(f"{self.name} can drive")
-    #     else:
-    #         print(f"{self.name} can't drive")
+    def drive(self):
+        if self.age >= 18:
+            print(f"{self.name} can drive")
+        else:
+            print(f"{self.name} can't drive")
 
     # destructor
     def __del__(self):
@@ -540,8 +541,13 @@ class Baby(Person):
             raise ValueError
 
     def drive(self):
-        print(f"{self.name} can't drive")
-        raise Exception("You are too young to drive!")
+        try:
+            super().drive()
+        except:
+            print(f"{self.name} can't drive")
+            raise Exception("You are too young to drive!")
+        else:
+            print(f"{self.name} can't drive")
 
 
 class Adult(Person):
@@ -572,8 +578,9 @@ print("person is deleted")
 baby = Baby("マリン", 3)
 baby.drive()
 
-adult = Adult("John", 20)
+adult = Adult("Mark", 20)
 adult.drive()
+
 
 class Car(object):
     def __init__(self, model=None):
@@ -630,7 +637,7 @@ toyota_car = ToyotaCar("Lexus")
 print(toyota_car.model)
 toyota_car.run()
 
-tesla_car = TeslaCar("Model S", passwd="5678")
+tesla_car = TeslaCar("Model S", passwd="1234")
 print(tesla_car.model)
 tesla_car.auto_run()
 tesla_car.run()
@@ -640,8 +647,338 @@ except AttributeError as e:
     print(f"AttributeError: {e}")
 else:
     print(tesla_car.enabled_auto_run)
-# finally:
-#     print("Clean up!")
+finally:
+    print("Clean up!")
+
+
+class Human(object):
+
+    kind = "human"
+
+    def __init__(self, name):
+        self.name = name
+
+    def who_are_you(self):
+        print(f"I'm {self.name}. I'm a {self.kind}.")
+
+
+a = Human("John")
+b = Human("Mary")
+a.who_are_you()
+b.who_are_you()
+
+
+class T(object):
+
+    words = []
+
+    def add_word(self, word):
+        self.words.append(word)
+
+
+c = T()
+c.add_word("hello")
+c.add_word("world")
+print(c.words)
+
+d = T()
+d.add_word("hola")
+d.add_word("mundo")
+print(d.words)
+
+# class method
+class Person(object):
+
+    kind = "human"
+
+    def __init__(self):
+        self.x = 100
+
+    @classmethod
+    def what_is_your_kind(cls):
+        return cls.kind
+
+    @staticmethod
+    def about_me(year):
+        print(f"I'm a human born in {year}")
+
+a = Person()
+print(a.what_is_your_kind())
+print(a.about_me(1979))
+print(Person.kind)
+print(Person.what_is_your_kind())
+
+Person.about_me(2020)
+
+class Word(object):
+    def __init__(self, text):
+        self.text = text
+
+    def __str__(self):
+        return self.text
+
+    def __len__(self):
+        return len(self.text)
+
+    def __add__(self, word):
+        return self.text.lower() + word.text.lower()
+
+    def __eq__(self, word):
+        return self.text.lower() == word.text.lower()
+
+    def __repr__(self):
+        return f"Word('{self.text}')"
+
+w1 = Word("Hello")
+w2 = Word("World")
+
+print(w1)
+print(w1 + w2)
+print(w1 == w2)
+print(len(w1))
+print(repr(w1))
+
+"""
+__eq__(self, other) : self == other
+__ne__(self, other) : self != other
+__lt__(self, other) : self < other
+__gt__(self, other) : self > other
+__le__(self, other) : self <= other
+__ge__(self, other) : self >= other
+
+__add__(self, other) : self + other
+__radd__(self, other) : other + self
+__iadd__(self, other) : self += other
+__sub__(self, other) : self - other
+__rsub__(self, other) : other - self
+__isub__(self, other) : self -= other
+__mul__(self, other) : self * other
+__rmul__(self, other) : other * self
+__imul__(self, other) : self *= other
+__truediv__(self, other) : self / other
+__rtruediv__(self, other) : other / self
+__itruediv__(self, other) : self /= other
+__floordiv__(self, other) : self // other
+__rfloordiv__(self, other) : other // self
+__ifloordiv__(self, other) : self //= other
+__mod__(self, other) : self % other
+__rmod__(self, other) : other % self
+__imod__(self, other) : self %= other
+__pow__(self, other) : self ** other
+__rpow__(self, other) : other ** self
+__ipow__(self, other) : self **= other
+__lshift__(self, other) : self << other
+__rshift__(self, other) : self >> other
+__ilshift__(self, other) : self <<= other
+__irshift__(self, other) : self >>= other
+__and__(self, other) : self & other
+__rand__(self, other) : other & self
+__iand__(self, other) : self &= other
+__xor__(self, other) : self ^ other
+__rxor__(self, other) : other ^ self
+__ixor__(self, other) : self ^= other
+__or__(self, other) : self | other
+__ror__(self, other) : other | self
+__ior__(self, other) : self |= other
+__rshift(self, other) : self >> other
+__rrshift(self, other) : other >> self
+__irshift(self, other) : self >>= other
+__neg__(self) : -self
+__pos__(self) : +self
+__abs__(self) : abs(self)
+__invert__(self) : ~self
+__complex__(self) : complex(self)
+__int__(self) : int(self)
+__float__(self) : float(self)
+__oct__(self) : oct(self)
+__hex__(self) : hex(self)
+__index__(self) : self.__index__()
+__trunc__(self) : self.__trunc__()
+__floor__(self) : self.__floor__()
+__ceil__(self) : self.__ceil__()
+__round__(self) : self.__round__()
+"""
+
+f = open("test.txt", "w")
+f.write("Hello World!\n")
+print("My", "name", "is", "John", sep=" ", end="!", file=f)
+f.close()
+
+words = """\
+Hello
+World
+matrix
+"""
+
+with open("test.txt", "w") as f:
+    f.write(words)
+
+with open("test.txt", "r") as f:
+    print(f.read())
+
+s = """\
+Hi $name.
+
+$contents
+
+Have a good day!
+"""
+
+t = string.Template(s)
+contents = t.substitute(name="John", contents="How are you?")
+print(contents)
+
+with open("design/index_template.html", "r") as f:
+    t = string.Template(f.read())
+
+contents = t.substitute(name="John", contents="How are you?")
+print(contents)
+
+import csv
+
+with open("test.csv", "w", newline="") as f:
+    fieldnames = ["Name", "Count"]
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
+
+    writer.writerow({"Name": "John", "Count": 1})
+    writer.writerow({"Name": "Mary", "Count": 2})
+
+with open("test.csv", "r") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row["Name"], row["Count"])
+
+import os
+
+print(os.getcwd())
+print(os.listdir())
+print(os.path.exists("test.txt"))
+print(os.path.isfile("test.txt"))
+print(os.path.isdir("design"))
+print(os.path.splitext("test.txt"))
+print(os.path.basename("test.txt"))
+print(os.path.dirname("test.txt"))
+print(os.path.join("design", "index.html"))
+print(os.path.abspath("test.txt"))
+print(os.path.relpath("test.txt", "design"))
+print(os.path.getsize("test.txt"))
+print(os.path.getmtime("test.txt"))
+print(os.path.getatime("test.txt"))
+print(os.path.getctime("test.txt"))
+if os.path.exists("test_link.txt"):
+    os.remove("test_link.txt")
+    os.symlink("test.txt", "test_link.txt")
+print(os.name)
+
+import platform
+
+print(platform.system())
+print(platform.release())
+print(platform.version())
+print(platform.platform())
+print(platform.architecture())
+print(platform.machine())
+print(platform.processor())
+print(platform.python_version())
+print(platform.python_implementation())
+print(platform.python_compiler())
+print(platform.python_build())
+print(platform.python_branch())
+print(platform.uname())
+print(platform.win32_ver())
+
+import pathlib
+
+pathlib.Path("empty.txt").touch()
+
+import glob
+import shutil
+import tarfile
+
+# with tarfile.open("test.tar.gz", "w:gz") as tr:
+#     tr.add("test_dir")
+
+# with tarfile.open("test.tar.gz", "r:gz") as tr:
+#     tr.extractall(path="test_dir_extract")
+#     with tr.extractfile("/path/to/test.txt") as f:
+#         print(f.read())
+
+import zipfile
+
+if os.path.exists("test_dir"):
+    shutil.rmtree("test_dir")
+os.mkdir("test_dir")
+pathlib.Path("test_dir/test.txt").touch()
+# os.chdir("test_dir")
+with zipfile.ZipFile("test.zip", "w") as zf:
+    # zf.write("test_dir")
+    # zf.write("test_dir/test.txt")
+    for i in glob.glob("test_dir/**", recursive=True):
+        print(i)
+        zf.write(i)
+
+with zipfile.ZipFile("test.zip", "r") as zf:
+    for i in zf.namelist():
+        print(i)
+    with zf.open("test_dir/test.txt") as f:
+        print(f.read())
+
+import tempfile
+
+with tempfile.TemporaryFile() as t:
+    t.write(b"Hello World!")
+    t.seek(0)
+    print(t.read())
+
+with tempfile.NamedTemporaryFile() as t:
+    print(t.name)
+    # with open(t.name, "w+") as f:
+    #     f.write("Hello World!")
+    #     t.seek(0)
+    #     print(t.read())
+
+with tempfile.TemporaryDirectory() as td:
+    print(td)
+    pathlib.Path(td).touch()
+    print(pathlib.Path(td).glob("*"))
+
+temp_dir = tempfile.mkdtemp()
+print(temp_dir)
+
+import subprocess
+
+# subprocess.run(["dir", "-ah"])
+subprocess.run("dir -ah", shell=True)
+
+import datetime
+
+now = datetime.datetime.now()
+print(now)
+print(now.year)
+print(now.month)
+print(now.day)
+print(now.isoformat())
+print(now.strftime("%Y-%m-%d %H:%M:%S"))
+
+today = datetime.date.today()
+print(today)
+print(today.isoformat())
+print(today.strftime("%Y-%m-%d"))
+
+t = datetime.time(12, 34, 56)
+print(t)
+print(t.isoformat())
+print(t.strftime("%H:%M:%S"))
+
+print(now)
+d = datetime.timedelta(weeks=1)
+d = datetime.timedelta(days=1)
+d = datetime.timedelta(hours=1)
+d = datetime.timedelta(minutes=1)
+d = datetime.timedelta(seconds=1)
+d = datetime.timedelta(microseconds=1)
+print(now + d)
 
 if __name__ == "__main__":
     sys.exit(0)
