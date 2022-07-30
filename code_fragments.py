@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from typing import Any
 
 count = 0
 while True:
@@ -168,26 +169,29 @@ def outer(a, b):
     r2 = inner(b, a)
     print(r1 + r2)
 
+
 outer(1, 2)
 
 # closure
 def outer(a, b):
-
     def inner():
         return a + b
 
     return inner
+
 
 print(outer(1, 2))
 f = outer(1, 2)
 r = f()
 print(r)
 
+
 def circle_area_func(pi):
     def circle_area(radius):
-        return pi * radius ** 2
+        return pi * radius**2
 
     return circle_area
+
 
 c1 = circle_area_func(3.14)
 c2 = circle_area_func(3.141592653589793)
@@ -202,11 +206,14 @@ def print_info(func):
         result = func(*args, **kwargs)
         print("end")
         return result
+
     return wrapper
+
 
 @print_info
 def add_num(a, b):
     return a + b
+
 
 r = add_num(10, 20)
 print(r)
@@ -216,8 +223,10 @@ print(r)
 def sub_num(a, b):
     return a - b
 
+
 r = sub_num(10, 20)
 print(r)
+
 
 def print_more(func):
     def wrapper(*args, **kwargs):
@@ -226,11 +235,14 @@ def print_more(func):
         print(f"kwargs: {kwargs}")
         print(f"result: {result}")
         return result
+
     return wrapper
+
 
 @print_more
 def add_num(a, b):
     return a + b
+
 
 r = add_num(10, 20)
 print(r)
@@ -239,6 +251,397 @@ f = print_info(print_more(add_num))
 r = f(10, 20)
 print(r)
 
+# lambda
+l = ["Mon", "tue", "Wed", "thu", "fri", "sat", "sun"]
+
+
+def change_words(words, func):
+    for word in words:
+        print(func(word))
+
+
+def sample_func(word):
+    return word.capitalize()
+
+
+def sample_func2(word):
+    return word.lower()
+
+
+sample_func = lambda word: word.capitalize()
+sample_func2 = lambda word: word.lower()
+change_words(l, sample_func)
+change_words(l, sample_func2)
+change_words(l, lambda word: word.capitalize())
+change_words(l, lambda word: word.lower())
+
+# generator
+l = ["Good morning", "Good afternoon", "Good evening"]
+
+for i in l:
+    print(i)
+
+print("-----------------------------------------------------")
+
+
+def greeting():
+    yield "Good morning"
+    yield "Good afternoon"
+    yield "Good evening"
+
+
+for g in greeting():
+    print(g)
+
+print("=====================================================")
+g = greeting()
+print(next(g))
+print("=====================================================")
+print(next(g))
+print("=====================================================")
+print(next(g))
+print("=====================================================")
+
+# 辞書内包表記
+w = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+f = ["coffee", "tea", "milk", "water", "coke", "juice", "beer"]
+
+d_1 = {}
+for w, f in zip(w, f):
+    d_1[w] = f
+
+
+d_2 = dict(zip(w, f))
+d_3 = {w: f for w, f in zip(w, f)}
+
+print(f"d_1: {d_1}")
+print(f"d_2: {d_2}")
+print(f"d_3: {d_3}")
+
+# 集合内包表記
+s_1 = set()
+
+for i in range(1, 10):
+    if i % 2 == 0:
+        s_1.add(i)
+
+s_2 = {i for i in range(1, 10) if i % 2 == 0}
+
+print(f"s_1: {sorted(s_1)}")
+print(f"s_2: {s_2}")
+
+# generator内包表記
+# generator内包表記は、for文で使用するために、yield文を使用する
+def generator_func():
+    for i in range(1, 10):
+        if i % 2 == 0:
+            yield i
+
+
+g = generator_func()
+
+g_1 = (i for i in range(1, 10) if i % 2 == 0)
+t_com = tuple(i for i in range(1, 10) if i % 2 == 0)
+t = tuple(g_1)
+
+print(f"type: {type(g)}\ng:{(g)}")
+print(f"type: {type(g_1)}\ng_1: {(g_1)}")
+print(f"type: {type(t_com)}\nt_com: {(t_com)}")
+print(f"type: {type(t)}\nt: {(t)}")
+
+# namespace
+"""test docstring"""
+
+animal = "cat"
+
+
+def f():
+    # print(animal)
+    # global animal
+    animal = "dog"
+    print(f"local animal: {locals()}")
+    print(f"local animal: {animal}")
+
+
+f()
+# print(f"func: {func}")
+print(f"global animal: {animal}")
+
+
+def f():
+    """test func docstring"""
+    print(f"func name: {f.__name__}")
+    print(f"func name: {f.__doc__}")
+
+
+f()
+print(f"global: {globals()}")
+
+# 例外処理
+l = [1, 2, 3, 4, 5]
+i = 10
+
+try:
+    (i + 1) / 0 + l
+    print(l[i])
+except NameError as e:
+    print(f"NameError: {e}")
+except IndexError as e:
+    print(f"IndexError: {e}")
+    print("but Don't worry!!")
+except Exception as e:
+    print(f"Exception: {e}")
+    print("but Don't worry!!")
+else:
+    print("Done!")
+finally:
+    print("Clean up!")
+
+print("Keep goin'!!!")
+
+
+class UpperCaseError(Exception):
+    pass
+
+
+def check(d: list) -> None:
+    for word in d:
+        if word.isupper():
+            raise UpperCaseError(f"{word} is upper case")
+
+
+try:
+    check(["Hello", "W", "Goodbye"])
+except UpperCaseError as e:
+    print(f"UpperCaseError: {e}")
+else:
+    print("Done!")
+finally:
+    print("Clean up!")
+
+# import package_lesson.utils as utils
+from package_lesson.say import utils
+
+result = utils.say_twice("Hello")
+print(result)
+
+from package_lesson.talk import human
+
+result = human.sing()
+print(result)
+
+print(human.cry())
+
+from package_lesson.talk import animal
+
+print(animal.sing())
+print(animal.cry())
+
+try:
+    from package_lesson import talk
+except ImportError as e:
+    from package_lesson import tools
+
+    print("tools is imported successfully!")
+else:
+    print("talk is imported successfully!")
+
+print(talk.human.sing())
+print(talk.animal.cry())
+
+# built-in packages
+import random
+import string
+
+rand_list = [random.randrange(1, 100) for _ in range(1, 100)]
+alphabets = string.ascii_lowercase
+ranking = {k: v for k, v in zip(alphabets, rand_list)}
+
+print(ranking)
+print(sorted(ranking.items(), key=lambda x: x[1], reverse=True))
+print(sorted(ranking, key=ranking.get, reverse=True))
+
+# standard library
+# collections
+s = "sdksgdgkmdldmvlskfvvkdghdgdkdbldbddbvvs"
+
+d = {}
+for c in s:
+    if c not in d:
+        d[c] = 0
+    d[c] += 1
+print(d)
+
+d = {c: s.count(c) for c in s}
+
+d = {}
+for c in s:
+    d.setdefault(c, 0)
+    d[c] += 1
+print(d)
+
+import collections
+from collections import defaultdict
+
+d = defaultdict(int)
+
+for c in s:
+    d[c] += 1
+print(d)
+
+import termcolor
+from termcolor import colored
+
+print("test")
+print(colored("test", "red"))
+
+print(f"termcolor: {termcolor.__file__}")
+print(f"collections: {collections.__file__}")
+print(f"sys.path: {sys.path}")
+
+# class
+import abc
+
+class Person(object, metaclass=abc.ABCMeta):
+    # constructor
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    # abstract method
+    @abc.abstractmethod
+    def drive(self):
+        pass
+
+    # method
+    def say_hello(self):
+        print(f"Hello, I'm {self.name}")
+
+    # method
+    def say_age(self):
+        print(f"I'm {self.age} years old")
+
+    # def drive(self):
+    #     if self.age >= 18:
+    #         print(f"{self.name} can drive")
+    #     else:
+    #         print(f"{self.name} can't drive")
+
+    # destructor
+    def __del__(self):
+        print(f"Goodbye, {self.name}")
+
+
+class Baby(Person):
+    def __init__(self, name, age):
+        if age < 18:
+            super().__init__(name, age)
+        else:
+            raise ValueError
+
+    def drive(self):
+        print(f"{self.name} can't drive")
+        raise Exception("You are too young to drive!")
+
+
+class Adult(Person):
+    def __init__(self, name, age):
+        if age >= 18:
+            super().__init__(name, age)
+        else:
+            raise ValueError
+
+    def drive(self):
+        print(f"{self.name} can drive!!")
+
+
+class NamedJohn(Person):
+    def __init__(self, name, age):
+        super().__init__(name, age)
+
+    def drive(self):
+        print(f"{self.name} can drive!!")
+
+
+person = NamedJohn("John", 30)
+person.say_hello()
+person.say_age()
+del person
+print("person is deleted")
+
+baby = Baby("マリン", 3)
+baby.drive()
+
+adult = Adult("John", 20)
+adult.drive()
+
+class Car(object):
+    def __init__(self, model=None):
+        self.model = model
+
+    def run(self):
+        print("run")
+
+    def ride(self, person):
+        person.drive()
+
+
+car = Car()
+car.ride(baby)
+car.ride(adult)
+
+
+class ToyotaCar(Car):
+    def run(self):
+        print("run fast")
+
+
+class TeslaCar(Car):
+    def __init__(self, model="Model S", enabled_auto_run=False, passwd="1234"):
+        super().__init__(model)
+        self._enabled_auto_run = enabled_auto_run
+        self._passwd = passwd
+
+    # getter
+    @property
+    def enabled_auto_run(self):
+        return self._enabled_auto_run
+
+    # setter
+    @enabled_auto_run.setter
+    def enabled_auto_run(self, _is_enabled):
+        if self._passwd == "1234":
+            self._enabled_auto_run = _is_enabled
+        else:
+            print("wrong password!!!")
+            raise ValueError(f"Invalid password: {self._passwd}")
+
+    def run(self):
+        print("run super fast")
+
+    def auto_run(self):
+        print("auto run")
+
+
+car = Car()
+car.run()
+
+toyota_car = ToyotaCar("Lexus")
+print(toyota_car.model)
+toyota_car.run()
+
+tesla_car = TeslaCar("Model S", passwd="5678")
+print(tesla_car.model)
+tesla_car.auto_run()
+tesla_car.run()
+try:
+    tesla_car.enabled_auto_run = True
+except AttributeError as e:
+    print(f"AttributeError: {e}")
+else:
+    print(tesla_car.enabled_auto_run)
+# finally:
+#     print("Clean up!")
 
 if __name__ == "__main__":
     sys.exit(0)
