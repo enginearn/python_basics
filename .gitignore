@@ -1,6 +1,9 @@
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
+config.*
+*.ini
+*.cnf
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -11,6 +14,7 @@ test_dir/
 empty.txt
 test_link.txt
 test.*
+roboter/
 # C extensions
 *.so
 

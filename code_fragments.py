@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from cgitb import handler
 import sys
 from typing import Any
 
@@ -702,6 +703,7 @@ class Person(object):
     def about_me(year):
         print(f"I'm a human born in {year}")
 
+
 a = Person()
 print(a.what_is_your_kind())
 print(a.about_me(1979))
@@ -709,6 +711,7 @@ print(Person.kind)
 print(Person.what_is_your_kind())
 
 Person.about_me(2020)
+
 
 class Word(object):
     def __init__(self, text):
@@ -728,6 +731,7 @@ class Word(object):
 
     def __repr__(self):
         return f"Word('{self.text}')"
+
 
 w1 = Word("Hello")
 w2 = Word("World")
@@ -979,6 +983,199 @@ d = datetime.timedelta(minutes=1)
 d = datetime.timedelta(seconds=1)
 d = datetime.timedelta(microseconds=1)
 print(now + d)
+
+long_word = []
+for word in ["hello", "world", "python"]:
+    long_word.append(f"additional-word {word}")
+new_long_word = " ".join(long_word)
+print(new_long_word)
+
+
+class MyError(Exception):
+    pass
+
+
+def error_raise(x):
+    try:
+        if x == 1:
+            raise MyError("This is a MyError")
+        elif x == 2:
+            raise Exception("This is an Exception")
+        else:
+            raise ValueError("This is a ValueError")
+    except MyError as e:
+        print(f"This is MyError e: {e}")
+    finally:
+        print("This is finally")
+
+
+# error_raise(3)
+
+
+def t():
+    num = []
+    for i in range(10):
+        num.append(i)
+    return num
+
+
+for i in t():
+    print(i)
+
+
+def t_gen():
+    for i in range(10):
+        yield i
+
+
+for i in t_gen():
+    print(i)
+
+
+def other_func(f):
+    print(f(10))
+
+
+def test_func(x):
+    return x * 2
+
+
+other_func(test_func)
+other_func(lambda x: x * 2)
+
+y = ""
+x = 1 if y else 2
+print(x)
+
+
+def base(x):
+    def plus(y):
+        return x + y
+
+    return plus
+
+
+plus = base(10)
+print(plus(20))
+print(plus(30))
+
+# configparser
+import configparser
+
+config = configparser.ConfigParser()
+config["DEFAULT"] = {"debug": True}
+config["web_server"] = {"host": "127.0.0.1", "port": 80}
+config["db_server"] = {"host": "127.0.0.1", "port": 3306}
+with open("config.ini", "w") as f:
+    config.write(f)
+print(config["DEFAULT"]["debug"])
+print(config["web_server"]["host"])
+print(config["db_server"]["host"])
+
+# pyyaml
+import yaml  # pip install pyyaml
+
+with open("config.yaml", "w") as yaml_file:
+    yaml.dump(
+        {
+            "web_server": {
+                "host": "127.0.0.",
+                "port": 8080,
+            },
+            "db_server": {
+                "host": "127.0.0.1",
+                "port": "3306",
+            },
+        },
+        yaml_file,
+        default_flow_style=False,
+    )
+
+with open("config.yaml", "r") as yaml_file:
+    data = yaml.load(yaml_file, Loader=yaml.FullLoader)
+    print(f"type: {type(data)}\n{data}")
+    print(f"type: {type(data['web_server'])}\n{data['web_server']}")
+    print(f"type: {type(data['web_server']['host'])}\n{data['web_server']['host']}")
+    print(f"type: {type(data['db_server'])}\n{data['db_server']}")
+    print(f"type: {type(data['db_server']['host'])}\n{data['db_server']['host']}")
+
+# logging
+import logging
+
+# https://docs.python.org/ja/3/library/logging.html#formatter-objects
+# formatter = '%(levelname)s: %(message)s'
+formatter = "%(asctime)s: %(levelname)s: %(message)s"
+# logging.basicConfig(
+#     level=logging.INFO, filename="test.log", filemode="w", format=formatter
+# )
+
+logging.basicConfig(level=logging.INFO, format=formatter)
+
+
+class NoPasswdFilter(logging.Filter):
+    def filter(self, record):
+        log_message = record.getMessage()
+        return "password" not in log_message
+
+
+logging.critical("critical")
+logging.error("error")
+logging.warning("warning")
+logging.info("info")
+logging.debug("debug")
+
+logging.info("%s %s", "foo", "bar")
+
+logging.info("%s %s", "foo", "bar", extra={"key": "value"})
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.debug("debug")
+
+import logtest
+
+logger = logging.getLogger(__name__)
+logger.addFilter(NoPasswdFilter())
+logger.info("from main")
+logger.info("from main passwd: %s", "password")
+
+logtest.do_something()
+
+import logging.config
+
+logging.config.fileConfig("logging.ini")
+logging.config.dictConfig(
+    {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "sampleFormatter": {"format": "%(asctime)s: %(levelname)s: %(message)s"},
+        },
+        "handlers": {
+            "sampleHandlers": {
+                "class": "logging.StreamHandler",
+                "formatter": "sampleFormatter",
+                "level": logging.DEBUG,
+            }
+        },
+        "root": {"handers": ["sampleHandlers"], "level": logging.WARNING},
+        "loggers": {
+            "sampleLoggers": {
+                "handlers": ["sampleHandlers"],
+                "level": logging.DEBUG,
+                "propagate": 0,
+            }
+        },
+    }
+)
+logger = logging.getLogger(__name__)
+logger = logging.getLogger("sampleLoggers")
+
+logger.debug("debug message from main")
+logger.info("info message from main")
+logger.warning("warning message from main")
+logger.error("error message from main")
+logger.critical("critical message from main")
+
 
 if __name__ == "__main__":
     sys.exit(0)
