@@ -1176,6 +1176,44 @@ logger.warning("warning message from main")
 logger.error("error message from main")
 logger.critical("critical message from main")
 
+from email import message
+import smtplib
+import ssl
+
+import config
+
+config.make_config()
+config = configparser.ConfigParser()
+config.read("smtp_gmail_config.ini")
+
+smtp_host = "smtp.gmail.com"
+smtp_port = 465
+from_email = config["EMAIL"]["address"]
+to_email = config["EMAIL"]["address"]
+user_name = config["EMAIL"]["user_name"]
+password = config["EMAIL"]["password"]
+
+print(f"smtp_host: {smtp_host} type: {type(smtp_host)}")
+print(f"smtp_port: {smtp_port} type: {type(smtp_port)}")
+
+msg = message.EmailMessage()
+msg.set_content("This is a test email")
+msg["Subject"] = "Test from Python Script"
+msg["From"] = from_email
+msg["To"] = to_email
+
+# server = smtplib.SMTP(smtp_host, smtp_port)
+server = smtplib.SMTP_SSL(smtp_host, smtp_port, context=ssl.create_default_context())
+
+server.set_debuglevel(True)
+server.ehlo()
+if server.has_extn('STARTTLS'):
+    server.starttls()
+server.ehlo()
+server.login(user_name, password)
+server.send_message(msg)
+server.quit()
+
 
 if __name__ == "__main__":
     sys.exit(0)
