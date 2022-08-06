@@ -1176,7 +1176,10 @@ logger.warning("warning message from main")
 logger.error("error message from main")
 logger.critical("critical message from main")
 
-from email import message
+# https://docs.python.org/ja/3/library/email.message.html
+# from email import message # Only send text
+from email.mime import multipart
+from email.mime import text
 import smtplib
 import ssl
 
@@ -1196,23 +1199,54 @@ password = config["EMAIL"]["password"]
 print(f"smtp_host: {smtp_host} type: {type(smtp_host)}")
 print(f"smtp_port: {smtp_port} type: {type(smtp_port)}")
 
-msg = message.EmailMessage()
-msg.set_content("This is a test email")
+# msg = message.EmailMessage()
+msg = multipart.MIMEMultipart()
+# msg.set_content("This is a test email")
 msg["Subject"] = "Test from Python Script"
 msg["From"] = from_email
 msg["To"] = to_email
+msg.attach(text.MIMEText("Test email", "plain"))
+
+# attachment
+with open("code_fragments.py", "r") as f:
+    attachment = text.MIMEText(f.read(), "plain")
+    attachment.add_header(
+        "Content-Disposition", "attachment", filename="code_fragments.txt"
+    )
+    msg.attach(attachment)
 
 # server = smtplib.SMTP(smtp_host, smtp_port)
 server = smtplib.SMTP_SSL(smtp_host, smtp_port, context=ssl.create_default_context())
 
 server.set_debuglevel(True)
 server.ehlo()
-if server.has_extn('STARTTLS'):
+if server.has_extn("STARTTLS"):
     server.starttls()
 server.ehlo()
 server.login(user_name, password)
 server.send_message(msg)
 server.quit()
+
+import logging.handlers
+ssl = smtplib.SMTP_SSL(smtp_host, smtp_port, context=ssl.create_default_context())
+
+logger = logging.getLogger("email")
+logger.setLevel(logging.CRITICAL)
+
+logger.addHandler(
+    logging.handlers.SMTPHandler(
+        (smtp_host, smtp_port),
+        from_email,
+        to_email,
+        subject="Admin test log",
+        credentials=(user_name, password),
+        secure=(ssl),
+        timeout=20,
+    )
+)
+
+logger.info("test")
+logger.critical("critical")
 
 
 if __name__ == "__main__":
