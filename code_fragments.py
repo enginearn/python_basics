@@ -1192,5 +1192,60 @@ with open("employee.json", "w") as f:
 with open("employee.json", "r") as f:
     print(json.load(f))
 
+# urllib urllib3
+import urllib.request
+import urllib3
+
+payload = {"key1": "value1", "key2": "value2"}
+
+url = "http://httpbin.org/get"
+with urllib.request.urlopen(url) as response:
+    # print(response.read().decode("utf-8"))
+    print(json.loads(response.read().decode("utf-8")))
+
+http = urllib3.PoolManager()
+r = http.request("GET", url)
+print(r.status)
+print(r.data.decode("utf-8")) # json
+
+url = "http://httpbin.org/post"
+payload = json.dumps(payload).encode("utf-8")
+req = urllib.request.Request(url, data=payload, method="POST")
+with urllib.request.urlopen(req) as response:
+    print(json.loads(response.read().decode("utf-8")))
+
+r = http.request("POST", url, body=payload)
+print(r.status)
+print(r.data.decode("utf-8")) # json
+
+url = "http://httpbin.org/put"
+# payload = json.dumps(payload).encode("utf-8")
+req = urllib.request.Request(url, data=payload, method="PUT")
+with urllib.request.urlopen(req) as response:
+    print(json.loads(response.read().decode("utf-8")))
+
+r = http.request("PUT", url, body=payload)
+print(r.status)
+print(r.data.decode("utf-8")) # json
+
+url = "http://httpbin.org/delete"
+# payload = json.dumps(payload).encode("utf-8")
+req = urllib.request.Request(url, data=payload, method="DELETE")
+with urllib.request.urlopen(req) as response:
+    print(json.loads(response.read().decode("utf-8")))
+
+r = http.request("DELETE", url, body=payload)
+print(r.status)
+print(r.data.decode("utf-8")) # json
+
+# requests
+import requests
+
+r = requests.get("http://httpbin.org/get", params=payload, timeout=3)
+print(r.status_code)
+print(r.text)
+print(r.json())
+
+
 if __name__ == "__main__":
     sys.exit(0)
