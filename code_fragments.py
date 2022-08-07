@@ -1100,7 +1100,5 @@ with open("config.yaml", "r") as yaml_file:
     print(f"type: {type(data['db_server']['host'])}\n{data['db_server']['host']}")
 
 
-
-
 if __name__ == "__main__":
     sys.exit(0)
