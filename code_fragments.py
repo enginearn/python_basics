@@ -1100,5 +1100,97 @@ with open("config.yaml", "r") as yaml_file:
     print(f"type: {type(data['db_server']['host'])}\n{data['db_server']['host']}")
 
 
+import dbm
+
+with dbm.open("cache", "c") as db:
+    db["key1"] = "value1"
+    db["key2"] = "value2"
+
+with dbm.open("cache", "r") as db:
+    print(db["key1"])
+    print(db["key2"])
+
+import pickle
+
+
+class T(object):
+    def __init__(self, name):
+        self.name = name
+
+data = {
+    "a": [1, 2, 3],
+    "b": ("test", "test"),
+    "c": {"key", "key"},
+    "d": T("test"),
+}
+
+with open("data.pickle", "wb") as f:
+    pickle.dump(data, f)
+
+with open("data.pickle", "rb") as f:
+    data_loaded = pickle.load(f)
+    print(data_loaded)
+    print(data_loaded["d"].name)
+    print(type(data_loaded["a"]))
+    print(type(data_loaded["b"]))
+    print(type(data_loaded["c"]))
+    print(type(data_loaded["d"]))
+
+# xml
+import xml.etree.ElementTree as ET
+
+root = ET.Element("root")
+tree = ET.ElementTree(element=root)
+
+employee = ET.SubElement(root, "employee")
+
+employ = ET.SubElement(employee, "employ")
+employ_id = ET.SubElement(employ, "id")
+employ_id.text = "111"
+employ_name = ET.SubElement(employ, "name")
+employ_name.text = "John"
+
+employ = ET.SubElement(employee, "employ")
+employ_id = ET.SubElement(employ, "id")
+employ_id.text = "222"
+employ_name = ET.SubElement(employ, "name")
+employ_name.text = "Mary"
+
+tree.write("employee.xml", encoding="utf-8", xml_declaration=True)
+
+tree = ET.ElementTree(file="employee.xml")
+root = tree.getroot()
+
+for employee in root:
+    for employ in employee:
+        for person in employ:
+            print(person.tag, person.text)
+
+# json
+import json
+
+j = {
+    "employee" :
+    [
+        {"id": 111, "name": "John"},
+        {"id": 222, "name": "ときのそら"}
+    ]
+}
+
+print(j)
+print("##########")
+print(json.dumps(j))
+print("@@@@@@@@@@")
+a = j
+print(json.dumps(a, indent=4, ensure_ascii=False))
+
+print("@@@@@@@@@@")
+
+with open("employee.json", "w") as f:
+    json.dump(j, f)
+
+with open("employee.json", "r") as f:
+    print(json.load(f))
+
 if __name__ == "__main__":
     sys.exit(0)
