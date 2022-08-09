@@ -4,7 +4,7 @@
 config.*
 *.ini
 *.cnf
-
+sqlite3_db/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
