@@ -137,8 +137,8 @@ for _ in range(len(date_list)):
         last_month_dates.append(first_date)
         break
     second_date = date_list[1]
-    if ((first_date.year != second_date.year and first_date.month != second_date.month)) or (
-        (first_date.year == second_date.year and first_date.month != second_date.month)):
+    if (first_date.year == second_date.year and first_date.month != second_date.month) or (
+        first_date.year != second_date.year and first_date.month != second_date.month):
         last_month_dates.append(first_date)
         date_list.pop(0)
     else:
